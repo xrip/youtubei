@@ -29,7 +29,7 @@ export var getDuration = function (s) {
 export var stripToInt = function (string) {
     if (!string)
         return null;
-    return Number(string.replace(/[^0-9]/g, "")) * (string.includes('K') ? 100 : 1);
+    return Number(string.replace(/[^0-9]/g, "")) * (string.includes('K') ? (string.includes('.') ? 100 : 1000) : 1);
 };
 export var getContinuationFromItems = function (items, accessors) {
     var e_1, _a;
