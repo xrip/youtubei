@@ -1,6 +1,5 @@
 {
 	"compilerOptions": {
-		"baseUrl": "/src",
 		"strict": true,
 		"esModuleInterop": true,
 		"experimentalDecorators": true,
