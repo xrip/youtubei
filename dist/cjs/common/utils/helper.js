@@ -22,7 +22,7 @@ exports.getDuration = getDuration;
 const stripToInt = (string) => {
     if (!string)
         return null;
-    return Number(string.replace(/[^0-9]/g, "")) * (string.includes('K') ? 100 : 1);
+    return Number(string.replace(/[^0-9]/g, "")) * (string.includes('K') ? (string.includes('.') ? 100 : 1000) : 1);
 };
 exports.stripToInt = stripToInt;
 const getContinuationFromItems = (items, accessors = ["continuationEndpoint"]) => {
