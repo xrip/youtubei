@@ -4,6 +4,7 @@ import { Client } from "../Client";
 import { PlaylistCompact } from "../PlaylistCompact";
 import { VideoCompact } from "../VideoCompact";
 import { BaseVideo } from "./BaseVideo";
+import { VideoCaptions } from "./VideoCaptions";
 
 export class BaseVideoParser {
 	static loadBaseVideo(target: BaseVideo, data: YoutubeRawData): BaseVideo {
@@ -52,6 +53,13 @@ export class BaseVideoParser {
 			target.related.continuation = getContinuationFromItems(secondaryContents);
 		}
 
+		// captions
+		if (videoInfo.captions) {
+			target.captions = new VideoCaptions({ client: target.client, video: target }).load(
+				videoInfo.captions.playerCaptionsTracklistRenderer
+			);
+		}
+
 		return target;
 	}
 
@@ -77,8 +85,8 @@ export class BaseVideoParser {
 		const secondaryInfo = contents.find(
 			(c: YoutubeRawData) => "videoSecondaryInfoRenderer" in c
 		).videoSecondaryInfoRenderer;
-		const videoDetails = data.playerResponse.videoDetails;
-		return { ...secondaryInfo, ...primaryInfo, videoDetails };
+		const { videoDetails, captions } = data.playerResponse;
+		return { ...secondaryInfo, ...primaryInfo, videoDetails, captions };
 	}
 
 	private static parseCompactRenderer(
