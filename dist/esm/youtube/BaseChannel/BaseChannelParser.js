@@ -14,13 +14,13 @@ var BaseChannelParser = /** @class */ (function () {
     };
     /** Parse tab data from request, tab name is ignored if it's a continuation data */
     BaseChannelParser.parseTabData = function (name, data) {
-        var _a, _b, _c, _d, _e;
+        var _a, _b, _c, _d, _e, _f, _g;
         var tab = (_a = data.contents) === null || _a === void 0 ? void 0 : _a.twoColumnBrowseResultsRenderer.tabs.find(function (t) {
             var _a;
             return (((_a = t.tabRenderer) === null || _a === void 0 ? void 0 : _a.endpoint.browseEndpoint.params) ===
                 BaseChannelParser.TAB_TYPE_PARAMS[name]);
         });
-        return (((_d = (_c = (_b = tab === null || tab === void 0 ? void 0 : tab.tabRenderer.content.sectionListRenderer) === null || _b === void 0 ? void 0 : _b.contents) === null || _c === void 0 ? void 0 : _c[0].itemSectionRenderer.contents[0].gridRenderer) === null || _d === void 0 ? void 0 : _d.items) || (tab === null || tab === void 0 ? void 0 : tab.tabRenderer.content.richGridRenderer.contents.map(function (c) { var _a; return ((_a = c.richItemRenderer) === null || _a === void 0 ? void 0 : _a.content) || c; })) || ((_e = data.onResponseReceivedActions) === null || _e === void 0 ? void 0 : _e[0].appendContinuationItemsAction.continuationItems.map(function (c) { var _a; return ((_a = c.richItemRenderer) === null || _a === void 0 ? void 0 : _a.content) || c; })) ||
+        return (((_e = (_d = (_c = (_b = tab === null || tab === void 0 ? void 0 : tab.tabRenderer.content.sectionListRenderer) === null || _b === void 0 ? void 0 : _b.contents) === null || _c === void 0 ? void 0 : _c[0].itemSectionRenderer) === null || _d === void 0 ? void 0 : _d.contents[0].gridRenderer) === null || _e === void 0 ? void 0 : _e.items) || ((_f = tab === null || tab === void 0 ? void 0 : tab.tabRenderer.content.richGridRenderer) === null || _f === void 0 ? void 0 : _f.contents.map(function (c) { var _a; return ((_a = c.richItemRenderer) === null || _a === void 0 ? void 0 : _a.content) || c; })) || ((_g = data.onResponseReceivedActions) === null || _g === void 0 ? void 0 : _g[0].appendContinuationItemsAction.continuationItems.map(function (c) { var _a; return ((_a = c.richItemRenderer) === null || _a === void 0 ? void 0 : _a.content) || c; })) ||
             []);
     };
     BaseChannelParser.TAB_TYPE_PARAMS = {
