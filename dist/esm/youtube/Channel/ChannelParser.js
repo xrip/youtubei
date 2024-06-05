@@ -17,16 +17,40 @@ var ChannelParser = /** @class */ (function () {
     function ChannelParser() {
     }
     ChannelParser.loadChannel = function (target, data) {
-        var _a = data.header.c4TabbedHeaderRenderer, channelId = _a.channelId, title = _a.title, avatar = _a.avatar, subscriberCountText = _a.subscriberCountText;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        var channelId, title, avatar, subscriberCountText, videoCountText, tvBanner, mobileBanner, banner;
+        var _o = data.header, c4TabbedHeaderRenderer = _o.c4TabbedHeaderRenderer, pageHeaderRenderer = _o.pageHeaderRenderer;
+        target.vanityChannelUrl = (_d = (_c = (_b = (_a = data.metadata) === null || _a === void 0 ? void 0 : _a.channelMetadataRenderer) === null || _b === void 0 ? void 0 : _b.vanityChannelUrl) === null || _c === void 0 ? void 0 : _c.split('/')) === null || _d === void 0 ? void 0 : _d.pop();
+        if (c4TabbedHeaderRenderer) {
+            channelId = c4TabbedHeaderRenderer.channelId;
+            title = c4TabbedHeaderRenderer.title;
+            subscriberCountText = (_e = c4TabbedHeaderRenderer.subscriberCountText) === null || _e === void 0 ? void 0 : _e.simpleText;
+            videoCountText = (_h = (_g = (_f = c4TabbedHeaderRenderer === null || c4TabbedHeaderRenderer === void 0 ? void 0 : c4TabbedHeaderRenderer.videosCountText) === null || _f === void 0 ? void 0 : _f.runs) === null || _g === void 0 ? void 0 : _g[0]) === null || _h === void 0 ? void 0 : _h.text;
+            avatar = (_j = c4TabbedHeaderRenderer.avatar) === null || _j === void 0 ? void 0 : _j.thumbnails;
+            tvBanner = (_k = c4TabbedHeaderRenderer === null || c4TabbedHeaderRenderer === void 0 ? void 0 : c4TabbedHeaderRenderer.tvBanner) === null || _k === void 0 ? void 0 : _k.thumbnails;
+            mobileBanner = (_l = c4TabbedHeaderRenderer === null || c4TabbedHeaderRenderer === void 0 ? void 0 : c4TabbedHeaderRenderer.mobileBanner) === null || _l === void 0 ? void 0 : _l.thumbnails;
+            banner = (_m = c4TabbedHeaderRenderer === null || c4TabbedHeaderRenderer === void 0 ? void 0 : c4TabbedHeaderRenderer.banner) === null || _m === void 0 ? void 0 : _m.thumbnails;
+        }
+        else {
+            channelId =
+                data.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer.endpoint
+                    .browseEndpoint.browseId;
+            title = pageHeaderRenderer.pageTitle;
+            var _p = pageHeaderRenderer.content.pageHeaderViewModel, metadata = _p.metadata, imageModel = _p.image, bannerModel = _p.banner;
+            var metadataRow = metadata.contentMetadataViewModel.metadataRows[1];
+            subscriberCountText = metadataRow.metadataParts[0].text.content;
+            videoCountText = metadataRow.metadataParts[1].text.content;
+            avatar = imageModel.decoratedAvatarViewModel.avatar.avatarViewModel.image.sources;
+            banner = bannerModel === null || bannerModel === void 0 ? void 0 : bannerModel.imageBannerViewModel.image.sources;
+        }
         target.id = channelId;
         target.name = title;
-        target.thumbnails = new Thumbnails().load(avatar.thumbnails);
-        target.videoCount = 0; // data not available
-        target.subscriberCount = subscriberCountText === null || subscriberCountText === void 0 ? void 0 : subscriberCountText.simpleText;
-        var _b = data.header.c4TabbedHeaderRenderer, tvBanner = _b.tvBanner, mobileBanner = _b.mobileBanner, banner = _b.banner;
-        target.banner = new Thumbnails().load((banner === null || banner === void 0 ? void 0 : banner.thumbnails) || []);
-        target.tvBanner = new Thumbnails().load((tvBanner === null || tvBanner === void 0 ? void 0 : tvBanner.thumbnails) || []);
-        target.mobileBanner = new Thumbnails().load((mobileBanner === null || mobileBanner === void 0 ? void 0 : mobileBanner.thumbnails) || []);
+        target.thumbnails = new Thumbnails().load(avatar);
+        target.videoCount = videoCountText;
+        target.subscriberCount = subscriberCountText;
+        target.banner = new Thumbnails().load(banner || []);
+        target.tvBanner = new Thumbnails().load(tvBanner || []);
+        target.mobileBanner = new Thumbnails().load(mobileBanner || []);
         target.shelves = ChannelParser.parseShelves(target, data);
         return target;
     };
