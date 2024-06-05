@@ -16,6 +16,8 @@ export class ChannelParser {
 			banner;
 		const { c4TabbedHeaderRenderer, pageHeaderRenderer } = data.header;
 
+		target.vanityChannelUrl = data.metadata?.channelMetadataRenderer?.vanityChannelUrl?.split('/')?.pop();
+
 		if (c4TabbedHeaderRenderer) {
 			channelId = c4TabbedHeaderRenderer.channelId;
 			title = c4TabbedHeaderRenderer.title;

@@ -19,6 +19,8 @@ export class BaseChannel extends Base implements BaseChannelProperties {
 	id!: string;
 	/** The channel's name */
 	name!: string;
+	/** The channel's nice looking url */
+	vanityChannelUrl?: string;
 	/** Thumbnails of this Channel */
 	thumbnails?: Thumbnails;
 	/**
