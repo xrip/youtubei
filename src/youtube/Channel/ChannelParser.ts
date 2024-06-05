@@ -6,24 +6,54 @@ import { Channel, ChannelShelf } from "./Channel";
 
 export class ChannelParser {
 	static loadChannel(target: Channel, data: YoutubeRawData): Channel {
-		const {
-			channelId,
+		let channelId,
 			title,
 			avatar,
 			subscriberCountText,
-		} = data.header.c4TabbedHeaderRenderer;
+			videoCountText,
+			tvBanner,
+			mobileBanner,
+			banner;
+		const { c4TabbedHeaderRenderer, pageHeaderRenderer } = data.header;
+
+		if (c4TabbedHeaderRenderer) {
+			channelId = c4TabbedHeaderRenderer.channelId;
+			title = c4TabbedHeaderRenderer.title;
+			subscriberCountText = c4TabbedHeaderRenderer.subscriberCountText?.simpleText;
+			videoCountText = c4TabbedHeaderRenderer?.videosCountText?.runs?.[0]?.text;
+			avatar = c4TabbedHeaderRenderer.avatar?.thumbnails;
+			tvBanner = c4TabbedHeaderRenderer?.tvBanner?.thumbnails;
+			mobileBanner = c4TabbedHeaderRenderer?.mobileBanner?.thumbnails;
+			banner = c4TabbedHeaderRenderer?.banner?.thumbnails;
+		} else {
+			channelId =
+				data.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer.endpoint
+					.browseEndpoint.browseId;
+			title = pageHeaderRenderer.pageTitle;
+
+			const {
+				metadata,
+				image: imageModel,
+				banner: bannerModel,
+			} = pageHeaderRenderer.content.pageHeaderViewModel;
+
+			const metadataRow = metadata.contentMetadataViewModel.metadataRows[1];
+
+			subscriberCountText = metadataRow.metadataParts[0].text.content;
+			videoCountText = metadataRow.metadataParts[1].text.content;
+			avatar = imageModel.decoratedAvatarViewModel.avatar.avatarViewModel.image.sources;
+			banner = bannerModel?.imageBannerViewModel.image.sources;
+		}
 
 		target.id = channelId;
 		target.name = title;
-		target.thumbnails = new Thumbnails().load(avatar.thumbnails);
-		target.videoCount = 0; // data not available
-		target.subscriberCount = subscriberCountText?.simpleText;
+		target.thumbnails = new Thumbnails().load(avatar);
+		target.videoCount = videoCountText;
+		target.subscriberCount = subscriberCountText;
 
-		const { tvBanner, mobileBanner, banner } = data.header.c4TabbedHeaderRenderer;
-
-		target.banner = new Thumbnails().load(banner?.thumbnails || []);
-		target.tvBanner = new Thumbnails().load(tvBanner?.thumbnails || []);
-		target.mobileBanner = new Thumbnails().load(mobileBanner?.thumbnails || []);
+		target.banner = new Thumbnails().load(banner || []);
+		target.tvBanner = new Thumbnails().load(tvBanner || []);
+		target.mobileBanner = new Thumbnails().load(mobileBanner || []);
 		target.shelves = ChannelParser.parseShelves(target, data);
 
 		return target;
