@@ -42,7 +42,7 @@ export class ChannelParser {
 			const metadataRow = metadata.contentMetadataViewModel.metadataRows[1];
 
 			subscriberCountText = metadataRow.metadataParts[0].text.content;
-			videoCountText = metadataRow.metadataParts[1].text.content;
+			videoCountText = metadataRow.metadataParts[1]?.text.content;
 			avatar = imageModel.decoratedAvatarViewModel.avatar.avatarViewModel.image.sources;
 			banner = bannerModel?.imageBannerViewModel.image.sources;
 		}

@@ -17,9 +17,9 @@ var ChannelParser = /** @class */ (function () {
     function ChannelParser() {
     }
     ChannelParser.loadChannel = function (target, data) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
         var channelId, title, avatar, subscriberCountText, videoCountText, tvBanner, mobileBanner, banner;
-        var _o = data.header, c4TabbedHeaderRenderer = _o.c4TabbedHeaderRenderer, pageHeaderRenderer = _o.pageHeaderRenderer;
+        var _p = data.header, c4TabbedHeaderRenderer = _p.c4TabbedHeaderRenderer, pageHeaderRenderer = _p.pageHeaderRenderer;
         target.vanityChannelUrl = (_d = (_c = (_b = (_a = data.metadata) === null || _a === void 0 ? void 0 : _a.channelMetadataRenderer) === null || _b === void 0 ? void 0 : _b.vanityChannelUrl) === null || _c === void 0 ? void 0 : _c.split('/')) === null || _d === void 0 ? void 0 : _d.pop();
         if (c4TabbedHeaderRenderer) {
             channelId = c4TabbedHeaderRenderer.channelId;
@@ -36,10 +36,10 @@ var ChannelParser = /** @class */ (function () {
                 data.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer.endpoint
                     .browseEndpoint.browseId;
             title = pageHeaderRenderer.pageTitle;
-            var _p = pageHeaderRenderer.content.pageHeaderViewModel, metadata = _p.metadata, imageModel = _p.image, bannerModel = _p.banner;
+            var _q = pageHeaderRenderer.content.pageHeaderViewModel, metadata = _q.metadata, imageModel = _q.image, bannerModel = _q.banner;
             var metadataRow = metadata.contentMetadataViewModel.metadataRows[1];
             subscriberCountText = metadataRow.metadataParts[0].text.content;
-            videoCountText = metadataRow.metadataParts[1].text.content;
+            videoCountText = (_o = metadataRow.metadataParts[1]) === null || _o === void 0 ? void 0 : _o.text.content;
             avatar = imageModel.decoratedAvatarViewModel.avatar.avatarViewModel.image.sources;
             banner = bannerModel === null || bannerModel === void 0 ? void 0 : bannerModel.imageBannerViewModel.image.sources;
         }
