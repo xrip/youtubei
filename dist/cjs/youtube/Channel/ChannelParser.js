@@ -7,7 +7,7 @@ const PlaylistCompact_1 = require("../PlaylistCompact");
 const VideoCompact_1 = require("../VideoCompact");
 class ChannelParser {
     static loadChannel(target, data) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m, _o;
         let channelId, title, avatar, subscriberCountText, videoCountText, tvBanner, mobileBanner, banner;
         const { c4TabbedHeaderRenderer, pageHeaderRenderer } = data.header;
         target.vanityChannelUrl = (_d = (_c = (_b = (_a = data.metadata) === null || _a === void 0 ? void 0 : _a.channelMetadataRenderer) === null || _b === void 0 ? void 0 : _b.vanityChannelUrl) === null || _c === void 0 ? void 0 : _c.split('/')) === null || _d === void 0 ? void 0 : _d.pop();
@@ -29,7 +29,7 @@ class ChannelParser {
             const { metadata, image: imageModel, banner: bannerModel, } = pageHeaderRenderer.content.pageHeaderViewModel;
             const metadataRow = metadata.contentMetadataViewModel.metadataRows[1];
             subscriberCountText = metadataRow.metadataParts[0].text.content;
-            videoCountText = metadataRow.metadataParts[1].text.content;
+            videoCountText = (_o = metadataRow.metadataParts[1]) === null || _o === void 0 ? void 0 : _o.text.content;
             avatar = imageModel.decoratedAvatarViewModel.avatar.avatarViewModel.image.sources;
             banner = bannerModel === null || bannerModel === void 0 ? void 0 : bannerModel.imageBannerViewModel.image.sources;
         }
