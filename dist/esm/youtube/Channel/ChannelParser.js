@@ -38,8 +38,8 @@ var ChannelParser = /** @class */ (function () {
             title = pageHeaderRenderer.pageTitle;
             var _q = pageHeaderRenderer.content.pageHeaderViewModel, metadata = _q.metadata, imageModel = _q.image, bannerModel = _q.banner;
             var metadataRow = metadata.contentMetadataViewModel.metadataRows[1];
-            subscriberCountText = metadataRow.metadataParts[0].text.content;
-            videoCountText = (_o = metadataRow.metadataParts[1]) === null || _o === void 0 ? void 0 : _o.text.content;
+            subscriberCountText = metadataRow === null || metadataRow === void 0 ? void 0 : metadataRow.metadataParts.find(function (m) { return !m.text.styeRuns; }).text.content;
+            videoCountText = (_o = metadataRow === null || metadataRow === void 0 ? void 0 : metadataRow.metadataParts.find(function (m) { return m.text.styeRuns; })) === null || _o === void 0 ? void 0 : _o.text.content;
             avatar = imageModel.decoratedAvatarViewModel.avatar.avatarViewModel.image.sources;
             banner = bannerModel === null || bannerModel === void 0 ? void 0 : bannerModel.imageBannerViewModel.image.sources;
         }

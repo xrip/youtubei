@@ -41,10 +41,10 @@ export class ChannelParser {
 
 			const metadataRow = metadata.contentMetadataViewModel.metadataRows[1];
 
-			subscriberCountText = metadataRow.metadataParts.find(
+			subscriberCountText = metadataRow?.metadataParts.find(
 				(m: YoutubeRawData) => !m.text.styeRuns
 			).text.content;
-			videoCountText = metadataRow.metadataParts.find((m: YoutubeRawData) => m.text.styeRuns)
+			videoCountText = metadataRow?.metadataParts.find((m: YoutubeRawData) => m.text.styeRuns)
 				?.text.content;
 			avatar = imageModel.decoratedAvatarViewModel.avatar.avatarViewModel.image.sources;
 			banner = bannerModel?.imageBannerViewModel.image.sources;

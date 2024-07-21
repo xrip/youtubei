@@ -28,8 +28,8 @@ class ChannelParser {
             title = pageHeaderRenderer.pageTitle;
             const { metadata, image: imageModel, banner: bannerModel, } = pageHeaderRenderer.content.pageHeaderViewModel;
             const metadataRow = metadata.contentMetadataViewModel.metadataRows[1];
-            subscriberCountText = metadataRow.metadataParts[0].text.content;
-            videoCountText = (_o = metadataRow.metadataParts[1]) === null || _o === void 0 ? void 0 : _o.text.content;
+            subscriberCountText = metadataRow === null || metadataRow === void 0 ? void 0 : metadataRow.metadataParts.find((m) => !m.text.styeRuns).text.content;
+            videoCountText = (_o = metadataRow === null || metadataRow === void 0 ? void 0 : metadataRow.metadataParts.find((m) => m.text.styeRuns)) === null || _o === void 0 ? void 0 : _o.text.content;
             avatar = imageModel.decoratedAvatarViewModel.avatar.avatarViewModel.image.sources;
             banner = bannerModel === null || bannerModel === void 0 ? void 0 : bannerModel.imageBannerViewModel.image.sources;
         }
