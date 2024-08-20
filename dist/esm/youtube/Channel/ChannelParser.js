@@ -56,35 +56,52 @@ var ChannelParser = /** @class */ (function () {
     };
     ChannelParser.parseShelves = function (target, data) {
         var e_1, _a;
-        var _b, _c;
+        var _b, _c, _d, _e;
         var shelves = [];
         var rawShelves = ((_b = data.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer.content) === null || _b === void 0 ? void 0 : _b.sectionListRenderer.contents) || [];
         try {
+            // console.warn(rawShelves);
             for (var rawShelves_1 = __values(rawShelves), rawShelves_1_1 = rawShelves_1.next(); !rawShelves_1_1.done; rawShelves_1_1 = rawShelves_1.next()) {
                 var rawShelf = rawShelves_1_1.value;
                 var shelfRenderer = (_c = rawShelf.itemSectionRenderer) === null || _c === void 0 ? void 0 : _c.contents[0].shelfRenderer;
-                if (!shelfRenderer)
-                    continue;
-                var title = shelfRenderer.title, content = shelfRenderer.content, subtitle = shelfRenderer.subtitle;
-                if (!content.horizontalListRenderer)
-                    continue;
-                var items = content.horizontalListRenderer.items
-                    .map(function (i) {
-                    if (i.gridVideoRenderer)
-                        return new VideoCompact({ client: target.client }).load(i.gridVideoRenderer);
-                    if (i.gridPlaylistRenderer)
-                        return new PlaylistCompact({ client: target.client }).load(i.gridPlaylistRenderer);
-                    if (i.gridChannelRenderer)
-                        return new BaseChannel({ client: target.client }).load(i.gridChannelRenderer);
-                    return undefined;
-                })
-                    .filter(function (i) { return i !== undefined; });
-                var shelf = {
-                    title: title.runs[0].text,
-                    subtitle: subtitle === null || subtitle === void 0 ? void 0 : subtitle.simpleText,
-                    items: items,
-                };
-                shelves.push(shelf);
+                var channelFeaturedContentRenderer = (_e = (_d = rawShelf.itemSectionRenderer) === null || _d === void 0 ? void 0 : _d.contents[0]) === null || _e === void 0 ? void 0 : _e.channelFeaturedContentRenderer;
+                if (shelfRenderer) {
+                    var title = shelfRenderer.title, content = shelfRenderer.content, subtitle = shelfRenderer.subtitle;
+                    if (!content.horizontalListRenderer)
+                        continue;
+                    var items = content.horizontalListRenderer.items
+                        .map(function (i) {
+                        if (i.gridVideoRenderer)
+                            return new VideoCompact({ client: target.client }).load(i.gridVideoRenderer);
+                        if (i.gridPlaylistRenderer)
+                            return new PlaylistCompact({ client: target.client }).load(i.gridPlaylistRenderer);
+                        if (i.gridChannelRenderer)
+                            return new BaseChannel({ client: target.client }).load(i.gridChannelRenderer);
+                        return undefined;
+                    })
+                        .filter(function (i) { return i !== undefined; });
+                    var shelf = {
+                        title: title.runs[0].text,
+                        subtitle: subtitle === null || subtitle === void 0 ? void 0 : subtitle.simpleText,
+                        items: items,
+                    };
+                    shelves.push(shelf);
+                }
+                if (channelFeaturedContentRenderer) {
+                    var items = channelFeaturedContentRenderer.items
+                        .map(function (i) {
+                        if (i.videoRenderer)
+                            return new VideoCompact({ client: target.client }).load(i.videoRenderer);
+                        return undefined;
+                    })
+                        .filter(function (i) { return i !== undefined; });
+                    var shelf = {
+                        title: 'Featured',
+                        subtitle: '',
+                        items: items,
+                    };
+                    shelves.push(shelf);
+                }
             }
         }
         catch (e_1_1) { e_1 = { error: e_1_1 }; }

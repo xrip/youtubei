@@ -70,43 +70,70 @@ export class ChannelParser {
 		const rawShelves =
 			data.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer.content?.sectionListRenderer.contents || [];
 
+		// console.warn(rawShelves);
+
 		for (const rawShelf of rawShelves) {
+
 			const shelfRenderer = rawShelf.itemSectionRenderer?.contents[0].shelfRenderer;
-			if (!shelfRenderer) continue;
+			const channelFeaturedContentRenderer = rawShelf.itemSectionRenderer?.contents[0]?.channelFeaturedContentRenderer;
 
-			const { title, content, subtitle } = shelfRenderer;
-			if (!content.horizontalListRenderer) continue;
+			if (shelfRenderer) {
 
-			const items:
-				| BaseChannel[]
-				| VideoCompact[]
-				| PlaylistCompact[] = content.horizontalListRenderer.items
-				.map((i: YoutubeRawData) => {
-					if (i.gridVideoRenderer)
-						return new VideoCompact({ client: target.client }).load(
-							i.gridVideoRenderer
-						);
-					if (i.gridPlaylistRenderer)
-						return new PlaylistCompact({ client: target.client }).load(
-							i.gridPlaylistRenderer
-						);
-					if (i.gridChannelRenderer)
-						return new BaseChannel({ client: target.client }).load(
-							i.gridChannelRenderer
-						);
-					return undefined;
-				})
-				.filter((i: YoutubeRawData) => i !== undefined);
+				const {title, content, subtitle} = shelfRenderer;
+				if (!content.horizontalListRenderer) continue;
 
-			const shelf: ChannelShelf = {
-				title: title.runs[0].text,
-				subtitle: subtitle?.simpleText,
-				items,
-			};
+				const items:
+					| BaseChannel[]
+					| VideoCompact[]
+					| PlaylistCompact[] = content.horizontalListRenderer.items
+					.map((i: YoutubeRawData) => {
+						if (i.gridVideoRenderer)
+							return new VideoCompact({client: target.client}).load(
+								i.gridVideoRenderer
+							);
+						if (i.gridPlaylistRenderer)
+							return new PlaylistCompact({client: target.client}).load(
+								i.gridPlaylistRenderer
+							);
+						if (i.gridChannelRenderer)
+							return new BaseChannel({client: target.client}).load(
+								i.gridChannelRenderer
+							);
+						return undefined;
+					})
+					.filter((i: YoutubeRawData) => i !== undefined);
 
-			shelves.push(shelf);
+				const shelf: ChannelShelf = {
+					title: title.runs[0].text,
+					subtitle: subtitle?.simpleText,
+					items,
+				};
+
+				shelves.push(shelf);
+			}
+			if (channelFeaturedContentRenderer) {
+				const items:
+					| BaseChannel[]
+					| VideoCompact[]
+					| PlaylistCompact[] = channelFeaturedContentRenderer.items
+					.map((i: YoutubeRawData) => {
+						if (i.videoRenderer)
+							return new VideoCompact({client: target.client}).load(
+								i.videoRenderer
+							);
+						return undefined;
+					})
+					.filter((i: YoutubeRawData) => i !== undefined);
+
+				const shelf: ChannelShelf = {
+					title: 'Featured',
+					subtitle: '',
+					items,
+				};
+
+				shelves.push(shelf);
+			}
 		}
-
 		return shelves;
 	}
 }

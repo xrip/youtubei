@@ -45,33 +45,50 @@ class ChannelParser {
         return target;
     }
     static parseShelves(target, data) {
-        var _a, _b;
+        var _a, _b, _c, _d;
         const shelves = [];
         const rawShelves = ((_a = data.contents.twoColumnBrowseResultsRenderer.tabs[0].tabRenderer.content) === null || _a === void 0 ? void 0 : _a.sectionListRenderer.contents) || [];
+        // console.warn(rawShelves);
         for (const rawShelf of rawShelves) {
             const shelfRenderer = (_b = rawShelf.itemSectionRenderer) === null || _b === void 0 ? void 0 : _b.contents[0].shelfRenderer;
-            if (!shelfRenderer)
-                continue;
-            const { title, content, subtitle } = shelfRenderer;
-            if (!content.horizontalListRenderer)
-                continue;
-            const items = content.horizontalListRenderer.items
-                .map((i) => {
-                if (i.gridVideoRenderer)
-                    return new VideoCompact_1.VideoCompact({ client: target.client }).load(i.gridVideoRenderer);
-                if (i.gridPlaylistRenderer)
-                    return new PlaylistCompact_1.PlaylistCompact({ client: target.client }).load(i.gridPlaylistRenderer);
-                if (i.gridChannelRenderer)
-                    return new BaseChannel_1.BaseChannel({ client: target.client }).load(i.gridChannelRenderer);
-                return undefined;
-            })
-                .filter((i) => i !== undefined);
-            const shelf = {
-                title: title.runs[0].text,
-                subtitle: subtitle === null || subtitle === void 0 ? void 0 : subtitle.simpleText,
-                items,
-            };
-            shelves.push(shelf);
+            const channelFeaturedContentRenderer = (_d = (_c = rawShelf.itemSectionRenderer) === null || _c === void 0 ? void 0 : _c.contents[0]) === null || _d === void 0 ? void 0 : _d.channelFeaturedContentRenderer;
+            if (shelfRenderer) {
+                const { title, content, subtitle } = shelfRenderer;
+                if (!content.horizontalListRenderer)
+                    continue;
+                const items = content.horizontalListRenderer.items
+                    .map((i) => {
+                    if (i.gridVideoRenderer)
+                        return new VideoCompact_1.VideoCompact({ client: target.client }).load(i.gridVideoRenderer);
+                    if (i.gridPlaylistRenderer)
+                        return new PlaylistCompact_1.PlaylistCompact({ client: target.client }).load(i.gridPlaylistRenderer);
+                    if (i.gridChannelRenderer)
+                        return new BaseChannel_1.BaseChannel({ client: target.client }).load(i.gridChannelRenderer);
+                    return undefined;
+                })
+                    .filter((i) => i !== undefined);
+                const shelf = {
+                    title: title.runs[0].text,
+                    subtitle: subtitle === null || subtitle === void 0 ? void 0 : subtitle.simpleText,
+                    items,
+                };
+                shelves.push(shelf);
+            }
+            if (channelFeaturedContentRenderer) {
+                const items = channelFeaturedContentRenderer.items
+                    .map((i) => {
+                    if (i.videoRenderer)
+                        return new VideoCompact_1.VideoCompact({ client: target.client }).load(i.videoRenderer);
+                    return undefined;
+                })
+                    .filter((i) => i !== undefined);
+                const shelf = {
+                    title: 'Featured',
+                    subtitle: '',
+                    items,
+                };
+                shelves.push(shelf);
+            }
         }
         return shelves;
     }
