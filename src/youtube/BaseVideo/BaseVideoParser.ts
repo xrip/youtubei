@@ -10,7 +10,6 @@ export class BaseVideoParser {
 	static loadBaseVideo(target: BaseVideo, data: YoutubeRawData): BaseVideo {
 		const videoInfo = BaseVideoParser.parseRawData(data);
 
-		console.log(videoInfo.title);
 		// Basic information
 		target.id = videoInfo.videoDetails.videoId;
 		target.title = videoInfo.videoDetails.title;
@@ -79,8 +78,6 @@ export class BaseVideoParser {
 	}
 
 	static parseRawData(data: YoutubeRawData): YoutubeRawData {
-		// console.warn(data.playerResponse);
-		// console.info(data.response);
 		const contents = data.response.contents.twoColumnWatchNextResults.results.results.contents;
 
 		const primaryInfo = contents.find((c: YoutubeRawData) => "videoPrimaryInfoRenderer" in c)
