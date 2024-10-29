@@ -32,7 +32,7 @@ export class HTTP {
 	private cookie: string;
 	private defaultHeaders: HeadersInit;
 	private defaultFetchOptions: Partial<RequestInit>;
-	private defaultClientOptions: Record<string, unknown>;
+	public defaultClientOptions: Record<string, unknown>;
 
 	constructor(options: HTTPOptions) {
 		this.apiKey = options.apiKey;

@@ -20,6 +20,7 @@ var BaseVideoParser = /** @class */ (function () {
     BaseVideoParser.loadBaseVideo = function (target, data) {
         var _a, _b, _c;
         var videoInfo = BaseVideoParser.parseRawData(data);
+        console.log(videoInfo.title);
         // Basic information
         target.id = videoInfo.videoDetails.videoId;
         target.title = videoInfo.videoDetails.title;
@@ -64,6 +65,8 @@ var BaseVideoParser = /** @class */ (function () {
         return getContinuationFromItems(secondaryContents);
     };
     BaseVideoParser.parseRawData = function (data) {
+        // console.warn(data.playerResponse);
+        // console.info(data.response);
         var contents = data.response.contents.twoColumnWatchNextResults.results.results.contents;
         var primaryInfo = contents.find(function (c) { return "videoPrimaryInfoRenderer" in c; })
             .videoPrimaryInfoRenderer;

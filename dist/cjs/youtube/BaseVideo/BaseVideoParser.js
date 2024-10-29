@@ -10,6 +10,7 @@ class BaseVideoParser {
     static loadBaseVideo(target, data) {
         var _a, _b, _c;
         const videoInfo = BaseVideoParser.parseRawData(data);
+        console.log(videoInfo.title);
         // Basic information
         target.id = videoInfo.videoDetails.videoId;
         target.title = videoInfo.videoDetails.title;
@@ -54,6 +55,8 @@ class BaseVideoParser {
         return common_1.getContinuationFromItems(secondaryContents);
     }
     static parseRawData(data) {
+        // console.warn(data.playerResponse);
+        // console.info(data.response);
         const contents = data.response.contents.twoColumnWatchNextResults.results.results.contents;
         const primaryInfo = contents.find((c) => "videoPrimaryInfoRenderer" in c)
             .videoPrimaryInfoRenderer;

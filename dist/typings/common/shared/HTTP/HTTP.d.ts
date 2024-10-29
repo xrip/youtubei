@@ -26,7 +26,7 @@ export declare class HTTP {
     private cookie;
     private defaultHeaders;
     private defaultFetchOptions;
-    private defaultClientOptions;
+    defaultClientOptions: Record<string, unknown>;
     constructor(options: HTTPOptions);
     get(path: string, options?: Partial<Options>): Promise<Response>;
     post(path: string, options?: Partial<Options>): Promise<Response>;
