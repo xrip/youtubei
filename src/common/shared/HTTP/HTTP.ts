@@ -30,7 +30,7 @@ export class HTTP {
 	private clientName: string;
 	private clientVersion: string;
 	private cookie: string;
-	private defaultHeaders: HeadersInit;
+	public defaultHeaders: HeadersInit;
 	private defaultFetchOptions: Partial<RequestInit>;
 	public defaultClientOptions: Record<string, unknown>;
 

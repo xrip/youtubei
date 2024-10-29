@@ -6,7 +6,8 @@ import { Video } from "./Video";
 export class VideoParser {
 	static loadVideo(target: Video, data: YoutubeRawData): Video {
 		const videoInfo = BaseVideoParser.parseRawData(data);
-		target.duration = +videoInfo.videoDetails.lengthSeconds;
+		target.duration = +videoInfo.videoDetails?.lengthSeconds;
+
 
 		const itemSectionRenderer = data.response.contents.twoColumnWatchNextResults.results.results.contents
 			.reverse()

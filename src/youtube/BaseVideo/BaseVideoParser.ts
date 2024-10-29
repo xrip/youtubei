@@ -10,13 +10,14 @@ export class BaseVideoParser {
 	static loadBaseVideo(target: BaseVideo, data: YoutubeRawData): BaseVideo {
 		const videoInfo = BaseVideoParser.parseRawData(data);
 
+		// console.log(videoInfo);
 		// Basic information
-		target.id = videoInfo.videoDetails.videoId;
-		target.title = videoInfo.videoDetails.title;
+		target.id = videoInfo.videoDetails?.videoId || videoInfo.updatedMetadataEndpoint.updatedMetadataEndpoint.videoId;
+		target.title = videoInfo.videoDetails?.title || videoInfo.title.runs[0].text;
 		target.uploadDate = videoInfo.dateText.simpleText;
-		target.viewCount = +videoInfo.videoDetails.viewCount || null;
-		target.isLiveContent = videoInfo.videoDetails.isLiveContent;
-		target.thumbnails = new Thumbnails().load(videoInfo.videoDetails.thumbnail.thumbnails);
+		target.viewCount = +videoInfo.videoDetails?.viewCount || videoInfo.viewCount.videoViewCountRenderer.originalViewCount || null;
+		target.isLiveContent = videoInfo.videoDetails?.isLiveContent;
+		target.thumbnails = videoInfo.videoDetails && new Thumbnails().load(videoInfo.videoDetails?.thumbnail.thumbnails);
 
 		// Channel
 		const { title, thumbnail, subscriberCountText } = videoInfo.owner.videoOwnerRenderer;
@@ -38,7 +39,7 @@ export class BaseVideoParser {
 			videoInfo.superTitleLink?.runs
 				?.map((r: YoutubeRawData) => r.text.trim())
 				.filter((t: string) => t) || [];
-		target.description = videoInfo.videoDetails.shortDescription || "";
+		target.description = videoInfo.videoDetails?.shortDescription || videoInfo.attributedDescription.content || "";
 
 		// related videos
 		const secondaryContents =
