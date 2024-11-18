@@ -10,9 +10,9 @@ export class BaseVideoParser {
 	static loadBaseVideo(target: BaseVideo, data: YoutubeRawData): BaseVideo {
 		const videoInfo = BaseVideoParser.parseRawData(data);
 
-		// console.log(videoInfo);
+		// console.log(JSON.stringify(videoInfo, null,  4));
 		// Basic information
-		target.id = videoInfo.videoDetails?.videoId || videoInfo.updatedMetadataEndpoint.updatedMetadataEndpoint.videoId;
+		target.id = videoInfo.videoDetails?.videoId || videoInfo.updatedMetadataEndpoint?.updatedMetadataEndpoint?.videoId || JSON.stringify(data).match(/"videoId": "(.{11})"/);
 		target.title = videoInfo.videoDetails?.title || videoInfo.title.runs[0].text;
 		target.uploadDate = videoInfo.dateText.simpleText;
 		target.viewCount = +videoInfo.videoDetails?.viewCount || videoInfo.viewCount.videoViewCountRenderer.originalViewCount || null;

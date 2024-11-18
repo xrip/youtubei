@@ -8,16 +8,16 @@ const VideoCompact_1 = require("../VideoCompact");
 const VideoCaptions_1 = require("./VideoCaptions");
 class BaseVideoParser {
     static loadBaseVideo(target, data) {
-        var _a, _b, _c, _d, _e, _f, _g, _h, _j;
+        var _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l;
         const videoInfo = BaseVideoParser.parseRawData(data);
-        // console.log(videoInfo);
+        // console.log(JSON.stringify(videoInfo, null,  4));
         // Basic information
-        target.id = ((_a = videoInfo.videoDetails) === null || _a === void 0 ? void 0 : _a.videoId) || videoInfo.updatedMetadataEndpoint.updatedMetadataEndpoint.videoId;
-        target.title = ((_b = videoInfo.videoDetails) === null || _b === void 0 ? void 0 : _b.title) || videoInfo.title.runs[0].text;
+        target.id = ((_a = videoInfo.videoDetails) === null || _a === void 0 ? void 0 : _a.videoId) || ((_c = (_b = videoInfo.updatedMetadataEndpoint) === null || _b === void 0 ? void 0 : _b.updatedMetadataEndpoint) === null || _c === void 0 ? void 0 : _c.videoId) || JSON.stringify(data).match(/"videoId": "(.{11})"/);
+        target.title = ((_d = videoInfo.videoDetails) === null || _d === void 0 ? void 0 : _d.title) || videoInfo.title.runs[0].text;
         target.uploadDate = videoInfo.dateText.simpleText;
-        target.viewCount = +((_c = videoInfo.videoDetails) === null || _c === void 0 ? void 0 : _c.viewCount) || videoInfo.viewCount.videoViewCountRenderer.originalViewCount || null;
-        target.isLiveContent = (_d = videoInfo.videoDetails) === null || _d === void 0 ? void 0 : _d.isLiveContent;
-        target.thumbnails = videoInfo.videoDetails && new common_1.Thumbnails().load((_e = videoInfo.videoDetails) === null || _e === void 0 ? void 0 : _e.thumbnail.thumbnails);
+        target.viewCount = +((_e = videoInfo.videoDetails) === null || _e === void 0 ? void 0 : _e.viewCount) || videoInfo.viewCount.videoViewCountRenderer.originalViewCount || null;
+        target.isLiveContent = (_f = videoInfo.videoDetails) === null || _f === void 0 ? void 0 : _f.isLiveContent;
+        target.thumbnails = videoInfo.videoDetails && new common_1.Thumbnails().load((_g = videoInfo.videoDetails) === null || _g === void 0 ? void 0 : _g.thumbnail.thumbnails);
         // Channel
         const { title, thumbnail, subscriberCountText } = videoInfo.owner.videoOwnerRenderer;
         target.channel = new BaseChannel_1.BaseChannel({
@@ -32,10 +32,10 @@ class BaseVideoParser {
         target.likeCount = common_1.stripToInt(BaseVideoParser.parseButtonRenderer(topLevelButtons[0]));
         // Tags and description
         target.tags =
-            ((_g = (_f = videoInfo.superTitleLink) === null || _f === void 0 ? void 0 : _f.runs) === null || _g === void 0 ? void 0 : _g.map((r) => r.text.trim()).filter((t) => t)) || [];
-        target.description = ((_h = videoInfo.videoDetails) === null || _h === void 0 ? void 0 : _h.shortDescription) || videoInfo.attributedDescription.content || "";
+            ((_j = (_h = videoInfo.superTitleLink) === null || _h === void 0 ? void 0 : _h.runs) === null || _j === void 0 ? void 0 : _j.map((r) => r.text.trim()).filter((t) => t)) || [];
+        target.description = ((_k = videoInfo.videoDetails) === null || _k === void 0 ? void 0 : _k.shortDescription) || videoInfo.attributedDescription.content || "";
         // related videos
-        const secondaryContents = (_j = data.response.contents.twoColumnWatchNextResults.secondaryResults) === null || _j === void 0 ? void 0 : _j.secondaryResults.results;
+        const secondaryContents = (_l = data.response.contents.twoColumnWatchNextResults.secondaryResults) === null || _l === void 0 ? void 0 : _l.secondaryResults.results;
         if (secondaryContents) {
             target.related.items = BaseVideoParser.parseRelatedFromSecondaryContent(secondaryContents, target.client);
             target.related.continuation = common_1.getContinuationFromItems(secondaryContents);
